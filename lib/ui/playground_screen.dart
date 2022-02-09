@@ -24,8 +24,8 @@ class _PlaygroundScreenState extends State<PlaygroundScreen> {
     double screenWidth = MediaQuery.of(context).size.width;
     double size = 15;
 
-    while ((tableWidth * (size + 8)) > screenWidth ||
-        (tableHeight * (size + 8)) > screenHeight) {
+    while ((tableWidth * (size + 8)) + 4 * size > screenWidth ||
+        (tableHeight * (size + 8)) + 4 * size > screenHeight) {
       size -= .03;
     }
     return size > 0 ? size : 0;
@@ -40,31 +40,46 @@ class _PlaygroundScreenState extends State<PlaygroundScreen> {
 
     return Scaffold(
       backgroundColor: Colors.black,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        verticalDirection: VerticalDirection.up,
-        children: List.generate(
-          lifeProvider.tableHeight,
-          (j) => Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(
-                lifeProvider.tableWidth,
-                (i) => Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: InkWell(
-                        onTap: () {
-                          Provider.of<LifeProvider>(context, listen: false)
-                              .toggleCell(i, j);
-                        },
-                        child: CellWidget(
-                          calculatedSize: calculatedSize,
-                          i: i,
-                          j: j,
-                        ),
-                      ),
-                    )),
+      body: Stack(
+        children: [
+          Center(
+            child: Container(
+              width: (calculatedSize + 8) * lifeProvider.tableWidth +
+                  4 * calculatedSize,
+              height: (calculatedSize + 8) * lifeProvider.tableHeight +
+                  4 * calculatedSize,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: Colors.green)),
+            ),
           ),
-        ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            verticalDirection: VerticalDirection.up,
+            children: List.generate(
+              lifeProvider.tableHeight,
+              (j) => Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(
+                    lifeProvider.tableWidth,
+                    (i) => Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: InkWell(
+                            onTap: () {
+                              Provider.of<LifeProvider>(context, listen: false)
+                                  .toggleCell(i, j);
+                            },
+                            child: CellWidget(
+                              calculatedSize: calculatedSize,
+                              i: i,
+                              j: j,
+                            ),
+                          ),
+                        )),
+              ),
+            ),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
