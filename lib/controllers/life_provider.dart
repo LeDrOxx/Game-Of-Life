@@ -23,10 +23,23 @@ class LifeProvider extends ChangeNotifier {
     });
   }
 
+  void reset() {
+    table.clear();
+    playTimeInSeconds = 0;
+    populateTable();
+    notifyListeners();
+  }
+
+  int countLives() {
+    return table.values.where((element) => element.alive).length;
+  }
+
   Timer? _timer;
+  int playTimeInSeconds = 0;
 
   void initTicker() {
-    _timer = Timer.periodic(const Duration(milliseconds: 800), (_) {
+    _timer = Timer.periodic(const Duration(milliseconds: 1000), (_) {
+      playTimeInSeconds++;
       iterate();
     });
   }
