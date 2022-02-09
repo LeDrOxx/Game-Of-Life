@@ -26,7 +26,7 @@ class LifeProvider extends ChangeNotifier {
   Timer? _timer;
 
   void initTicker() {
-    _timer = Timer.periodic(const Duration(milliseconds: 1000), (_) {
+    _timer = Timer.periodic(const Duration(milliseconds: 800), (_) {
       iterate();
     });
   }
@@ -61,7 +61,6 @@ class LifeProvider extends ChangeNotifier {
     table.clear();
     table.addAll(nextGen);
     notifyListeners();
-    print('iteration done');
   }
 
   int countNeighbours(int x, int y, bool alive) {
