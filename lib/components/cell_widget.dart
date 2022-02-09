@@ -22,19 +22,29 @@ class _CellWidgetState extends State<CellWidget> {
   @override
   Widget build(BuildContext context) {
     final lifeProvider = Provider.of<LifeProvider>(context);
-    return SizedBox(
-      width: widget.calculatedSize,
-      height: widget.calculatedSize,
-      child: AnimatedContainer(
-        decoration: BoxDecoration(
-          color: lifeProvider.table['${widget.i}/${widget.j}']?.alive ?? false
-              ? Colors.green
-              : Colors.transparent,
-          shape: BoxShape.rectangle,
-          borderRadius: const BorderRadius.all(Radius.circular(4.0)),
+    return Padding(
+      padding: const EdgeInsets.all(4.0),
+      child: InkWell(
+        onTap: () {
+          Provider.of<LifeProvider>(context, listen: false)
+              .toggleCell(widget.i, widget.j);
+        },
+        child: SizedBox(
+          width: widget.calculatedSize,
+          height: widget.calculatedSize,
+          child: AnimatedContainer(
+            decoration: BoxDecoration(
+              color:
+                  lifeProvider.table['${widget.i}/${widget.j}']?.alive ?? false
+                      ? Colors.green
+                      : Colors.transparent,
+              shape: BoxShape.rectangle,
+              borderRadius: const BorderRadius.all(Radius.circular(4.0)),
+            ),
+            duration: const Duration(milliseconds: 300),
+            // curve: Curves.bounceInOut,
+          ),
         ),
-        duration: const Duration(milliseconds: 300),
-        // curve: Curves.bounceInOut,
       ),
     );
   }

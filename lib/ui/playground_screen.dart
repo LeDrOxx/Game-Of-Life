@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:game_of_life/components/cell_widget.dart';
+import 'package:game_of_life/components/dashboard_widget.dart';
 import 'package:game_of_life/controllers/life_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -20,7 +21,7 @@ class _PlaygroundScreenState extends State<PlaygroundScreen> {
   ///Keeps the cells size responsive and to avoid overflowing
   ///in case of window change on (Web / Desktop)
   double getSize({required int tableWidth, required int tableHeight}) {
-    double screenHeight = MediaQuery.of(context).size.height;
+    double screenHeight = MediaQuery.of(context).size.height - kToolbarHeight;
     double screenWidth = MediaQuery.of(context).size.width;
     double size = 15;
 
@@ -40,6 +41,11 @@ class _PlaygroundScreenState extends State<PlaygroundScreen> {
 
     return Scaffold(
       backgroundColor: Colors.black,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: DashboardWidget(),
+      ),
       body: Stack(
         children: [
           Center(
@@ -62,30 +68,15 @@ class _PlaygroundScreenState extends State<PlaygroundScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(
                     lifeProvider.tableWidth,
-                    (i) => Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          child: InkWell(
-                            onTap: () {
-                              Provider.of<LifeProvider>(context, listen: false)
-                                  .toggleCell(i, j);
-                            },
-                            child: CellWidget(
-                              calculatedSize: calculatedSize,
-                              i: i,
-                              j: j,
-                            ),
-                          ),
+                    (i) => CellWidget(
+                          calculatedSize: calculatedSize,
+                          i: i,
+                          j: j,
                         )),
               ),
             ),
           ),
         ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Provider.of<LifeProvider>(context, listen: false).toggle();
-        },
-        child: Icon(lifeProvider.isTicking ? Icons.pause : Icons.play_arrow),
       ),
     );
   }
