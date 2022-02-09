@@ -48,9 +48,27 @@ class _BoardScreenState extends State<BoardScreen> {
     super.initState();
   }
 
+  ///Keeps the boxes size responsive and to avoid overflowing
+  ///in case of window change on (Web / Desktop)
+  double getSize({required int tableWidth, required int tableHeight}) {
+    double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
+    double size = 15;
+
+    while ((tableWidth * (size + 8)) > screenWidth ||
+        (tableHeight * (size + 8)) > screenHeight) {
+      size -= .03;
+    }
+    return size > 0 ? size : 0;
+  }
+
   @override
   Widget build(BuildContext context) {
     final lifeProvider = Provider.of<LifeProvider>(context);
+    double calculatedSize = getSize(
+        tableWidth: lifeProvider.tableWidth,
+        tableHeight: lifeProvider.tableHeight);
+
     return Scaffold(
       backgroundColor: Colors.black,
       body: Column(
@@ -70,18 +88,18 @@ class _BoardScreenState extends State<BoardScreen> {
                               .toggleCell(i, j);
                         },
                         child: SizedBox(
-                          width: 10.0,
-                          height: 10.0,
+                          width: calculatedSize,
+                          height: calculatedSize,
                           child: AnimatedContainer(
                             decoration: BoxDecoration(
                               color: lifeProvider.table['$i/$j']?.alive ?? false
                                   ? Colors.green
-                                  : Colors.white30,
+                                  : Colors.transparent,
                               shape: BoxShape.rectangle,
                               borderRadius:
                                   const BorderRadius.all(Radius.circular(4.0)),
                             ),
-                            duration: const Duration(milliseconds: 300),
+                            duration: const Duration(milliseconds: 200),
                             // curve: Curves.bounceInOut,
                           ),
                         ),
