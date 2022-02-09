@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:game_of_life/cell.dart';
+import 'package:game_of_life/models/cell.dart';
 
 class LifeProvider extends ChangeNotifier {
   // int tableWidth = 80;
